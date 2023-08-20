@@ -1,0 +1,4 @@
+github.com/shura1014/common v1.0.1 h1:lnlQYel7u6FYiLt7c2iSNNXU5VK/oV6ejL2wPqokqLc=
+github.com/shura1014/common v1.0.1/go.mod h1:iTzLDUVaRxncI4Pw28oGxqWQyMAEzNagnihRW6Yntfo=
+github.com/shura1014/logger v1.0.1 h1:V/GATbrkNrZwOisEmaDYa2+cYlabpKLsWEsaX3cLf0w=
+github.com/shura1014/logger v1.0.1/go.mod h1:91X/NusZ0dNv6m+db56u14ZUWNADSzwxA2WqKdGZyAk=
