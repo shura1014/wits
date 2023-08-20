@@ -19,6 +19,8 @@ github.com/magiconair/properties v1.8.7/go.mod h1:Dhd985XPs7jluiymwWYZ0G4Z61jb3v
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/shura1014/acl v0.0.0-20230818021127-e9cb606a1de7 h1:dDYKlZZzD1d7IjSdn7Ps0r+cHxOUTsKghiuu7z/E9mc=
 github.com/shura1014/acl v0.0.0-20230818021127-e9cb606a1de7/go.mod h1:Cwl+sL1dIKZFjxIBZrfP2NeCQJ5EPFgBHKOwaAt/gJ4=
+github.com/shura1014/acl v1.0.0 h1:tVJERWlqgQuDwH0AtGpUTS7ZYcs3r8qc8p0j0kLgGpU=
+github.com/shura1014/acl v1.0.0/go.mod h1:Cwl+sL1dIKZFjxIBZrfP2NeCQJ5EPFgBHKOwaAt/gJ4=
 github.com/shura1014/cfg v1.0.1 h1:BeqWwLzE20wwCJtLLWKEos/+arx/TwTg6GXj/vKSbY4=
 github.com/shura1014/cfg v1.0.1/go.mod h1:BY802z2jHmPQIaqwy7vMvO2RvoJpl8w/cqtcjOfc7Eg=
 github.com/shura1014/common v1.0.1 h1:lnlQYel7u6FYiLt7c2iSNNXU5VK/oV6ejL2wPqokqLc=

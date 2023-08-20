@@ -11,7 +11,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
-	github.com/shura1014/acl v0.0.0-20230818021127-e9cb606a1de7 // indirect
+	github.com/shura1014/acl v1.0.0 // indirect
 	github.com/shura1014/cfg v1.0.1 // indirect
 	github.com/shura1014/common v1.0.1 // indirect
 	github.com/shura1014/logger v1.0.1 // indirect
