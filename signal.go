@@ -17,8 +17,8 @@ func (e *Engine) handlerSignal() {
 		syscall.SIGQUIT, // 键盘的退出
 		syscall.SIGKILL, // 杀死
 		syscall.SIGTERM, // kill 15 软件终止信号 优雅停机处理
-		syscall.SIGUSR1, // 用户自定义信号一
-		syscall.SIGUSR2, // 用户自定义的信号2
+		//syscall.SIGUSR1, // 用户自定义信号一
+		//syscall.SIGUSR2, // 用户自定义的信号2
 	)
 	var sig os.Signal
 	for {
@@ -31,8 +31,8 @@ func (e *Engine) handlerSignal() {
 		case syscall.SIGKILL, syscall.SIGINT, syscall.SIGQUIT:
 			Info("Server exiting the pid is %d", os.Getpid())
 			return
-		case syscall.SIGUSR1:
-			e.reload()
+		//case syscall.SIGUSR1:
+		//	e.reload()
 		default:
 		}
 	}
