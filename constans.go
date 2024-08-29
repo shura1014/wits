@@ -16,10 +16,14 @@ const (
 	HS384        = "HS384"
 	HS512        = "HS512"
 
-	WWWAuthenticate = "WWW-Authenticate"
-	XRealIP         = "X-Real-Ip"
-	XForwardedFor   = "X-Forwarded-For"
-	XRequestID      = "X-Request-Id"
+	WWWAuthenticate          = "WWW-Authenticate"
+	XRealIP                  = "X-Real-Ip"
+	XForwardedFor            = "X-Forwarded-For"
+	XRequestID               = "X-Request-Id"
+	HeaderReferer            = "Referer"
+	HeaderUserAgent          = "User-Agent"
+	HeaderContentType        = "Content-Type"
+	HeaderContentDisposition = "Content-Disposition"
 
 	DefaultLogPrefix    = "WITS"
 	AppLogPrefix        = "app.log.prefix"
