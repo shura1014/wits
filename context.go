@@ -189,7 +189,7 @@ func (c *Context) HandlerError(err *goerr.BizError) {
 		return
 	}
 	c.ERROR(err.DetailMsg())
-	_ = c.Fail("业务执行异常", nil)
+	c.Fail("业务执行异常", nil)
 }
 
 func (c *Context) SetHandlerBizError(handler HandlerBizError) {

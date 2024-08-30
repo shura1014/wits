@@ -68,6 +68,7 @@ func (c *Context) Fail(msg string, data any) {
 	if RestResultEnable() {
 		// 如果是RestResult模式，那么状态码应该是ok，根据code去判断
 		_ = c.Back(http.StatusOK, restErrorCode, msg, data)
+		return
 	}
 	_ = c.JSON(http.StatusInternalServerError, data)
 }
@@ -81,6 +82,7 @@ func (c *Context) Success(msg string, data any) {
 		if err != nil {
 			_ = c.Back(http.StatusOK, restErrorCode, msg, data)
 		}
+		return
 	}
 
 	err := c.JSON(http.StatusOK, data)

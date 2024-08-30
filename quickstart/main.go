@@ -13,7 +13,7 @@ func main() {
 	engine := wits.Default()
 	group := engine.Group("api")
 	group.GET("probe", func(ctx *wits.Context) {
-		_ = ctx.Success("ok", time.Now().UnixNano())
+		ctx.Success("ok", time.Now().UnixNano())
 	})
 	engine.RunServer()
 }
