@@ -90,22 +90,13 @@ func (r *Response) Flush() {
 	}
 
 	status := r.status
-	if status == restCode {
+	if status == restErrorCode {
 		r.status = http.StatusOK
 	}
 
 	r.WriteStatusNow()
 	if r.buffer.Len() > 0 {
-		if RestResultEnable() && status != restCode {
-			// 检查是否已经包装过了
-			if !r.isRestWrap {
-				WrapPre(r)
-				_, _ = r.Writer.Write(r.buffer.Bytes())
-				WrapPost(r)
-			}
-		} else {
-			_, _ = r.Writer.Write(r.buffer.Bytes())
-		}
+		_, _ = r.Writer.Write(r.buffer.Bytes())
 	}
 	r.buffer.Reset()
 	r.Writer.(http.Flusher).Flush()

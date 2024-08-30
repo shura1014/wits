@@ -14,12 +14,10 @@ const (
 )
 
 type Render interface {
-	// Render
-	/**
-	响应逻辑
-	w 响应流
-	status 需要响应的状态
-	*/
+
+	// Render 响应逻辑
+	//	w 响应流
+	//	status 需要响应的状态
 	Render(w response.Response, status int) error
 
 	contentTypeAndStatus(w response.Response, contentType string, status int)

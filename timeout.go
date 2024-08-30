@@ -44,7 +44,7 @@ func Timeout(t ...time.Duration) MiddlewareFunc {
 			select {
 			case <-data:
 			case <-c.Done():
-				_ = ctx.Fail(http.ErrHandlerTimeout.Error())
+				_ = ctx.Fail(http.ErrHandlerTimeout.Error(), nil)
 				return
 			}
 		}

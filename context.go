@@ -5,13 +5,11 @@ import (
 	"github.com/shura1014/common/container/tree"
 	"github.com/shura1014/common/goerr"
 	"github.com/shura1014/logger"
-	"github.com/shura1014/wits/bind"
 	"github.com/shura1014/wits/render"
 	"github.com/shura1014/wits/response"
 	"github.com/shura1014/wits/session"
 	"io"
 	"mime/multipart"
-	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -78,72 +76,6 @@ func (c *Context) GetUser() string {
 	return c.GetString(UserKey)
 }
 
-func (c *Context) Redirect(status int, url string) error {
-	return c.Render(status, &render.RedirectRender{Url: url, Request: c.R})
-}
-
-func (c *Context) JSON(status int, data any) error {
-	return c.Render(status, &render.JsonRender{Data: data})
-}
-
-// PureJSON 带有html格式的json不被编码
-func (c *Context) PureJSON(status int, data any) error {
-	return c.Render(status, &render.JsonRender{Data: data, Pure: true})
-}
-
-// ExpandJSON 是否展开json
-func (c *Context) ExpandJSON(status int, data any) error {
-	return c.Render(status, &render.JsonRender{Data: data, Expand: true})
-}
-
-func (c *Context) ExpandAndPureJSON(status int, data any) error {
-	return c.Render(status, &render.JsonRender{Data: data, Pure: true, Expand: true})
-}
-
-func (c *Context) XML(status int, data any) error {
-	return c.Render(status, &render.XmlRender{Data: data})
-}
-
-func (c *Context) ExpandXML(status int, data any) error {
-	return c.Render(status, &render.XmlRender{Data: data, Expand: true})
-}
-
-func (c *Context) String(status int, format string, values ...any) error {
-	return c.Render(status, &render.StringRender{Format: format, Data: values})
-}
-
-func (c *Context) HTMLTemplate(code int, name string, obj any) error {
-	instance := c.e.render.Instance(name, obj)
-	return c.Render(code, instance)
-}
-
-func (c *Context) ByteToString(status int, data []byte) error {
-	return c.Render(status, &render.StringRender{Format: string(data)})
-}
-
-func (c *Context) Back(code int, msg string) error {
-	return c.String(code, msg)
-
-}
-
-func (c *Context) Success(msg string) error {
-	return c.Back(http.StatusOK, msg)
-}
-
-func (c *Context) ReturnNow(status int) {
-	c.W.WriteStatus(status)
-	c.W.Flush()
-}
-
-func (c *Context) Fail(msg string) error {
-	return c.Back(http.StatusInternalServerError, msg)
-}
-
-func (c *Context) Render(status int, r render.Render) error {
-	err := r.Render(c.W, status)
-	return err
-}
-
 // File 文件操作
 func (c *Context) File(filepath string) {
 	http.ServeFile(c.W, c.R, filepath)
@@ -175,77 +107,6 @@ func (c *Context) FileAttachment(filepath, filename string) {
 	}
 	http.ServeFile(c.W, c.R, filepath)
 }
-
-// RequestHeader
-/**************头部操作****************************/
-func (c *Context) RequestHeader(key string) string {
-	return c.R.Header.Get(key)
-}
-
-func (c *Context) ContentType() string {
-	return c.R.Header.Get(HeaderContentType)
-}
-
-func (c *Context) GetMethod() string {
-	return c.R.Method
-}
-
-func (c *Context) GetPath() string {
-	return c.R.URL.Path
-}
-
-func (c *Context) Header(key, value string) {
-	if value == "" {
-		c.W.Header().Del(key)
-		return
-	}
-	c.W.Header().Set(key, value)
-}
-
-func (c *Context) UserAgent() string {
-	return c.RequestHeader(HeaderUserAgent)
-}
-
-func (c *Context) Referer() string {
-	return c.RequestHeader(HeaderReferer)
-}
-
-// RemoteIP 获取客户端ip
-func (c *Context) RemoteIP() string {
-	ip, _, err := net.SplitHostPort(strings.TrimSpace(c.R.RemoteAddr))
-	if err != nil {
-		return ""
-	}
-	return ip
-}
-
-func (c *Context) ClientIP() string {
-	var clientIP string
-
-	// 检查该ip是不是本地ip 或者说它是一个代理ip，因此需要找出原ip
-	proxyIps := c.RequestHeader(XForwardedFor)
-	if proxyIps != "" {
-		// XForwardedFor可能经过多重代理，取第一个就行
-		i := strings.IndexAny(proxyIps, ",")
-		if i > 0 {
-			clientIP = strings.TrimSpace(proxyIps[:i])
-		}
-		clientIP = strings.TrimPrefix(clientIP, "[")
-		clientIP = strings.TrimSuffix(clientIP, "]")
-		return clientIP
-	}
-
-	clientIP = c.RequestHeader(XRealIP)
-	if clientIP == "" {
-		clientIP = c.RemoteIP()
-	}
-
-	clientIP = strings.TrimPrefix(clientIP, "[")
-	clientIP = strings.TrimSuffix(clientIP, "]")
-	return clientIP
-}
-
-/**************头部操作****************************/
 
 /*******************************参数处理start********************************************/
 
@@ -296,78 +157,6 @@ func (c *Context) JSONP(code int, obj any) {
 	c.Render(code, &render.JsonpRender{Callback: callback, Data: obj})
 }
 
-/******************************参数绑定start*******************************************/
-
-// BindJSON
-// curl -X POST -d '{"name":"wendell","age":28}'  http://127.0.0.1:8888/user/bind/json
-func (c *Context) BindJSON(obj any) error {
-	return c.MustBindWith(obj, bind.JSON)
-}
-
-func (c *Context) EnableDecoderUseNumber(fun func()) {
-	number := bind.UseNumber
-	bind.EnableDecoderUseNumber()
-	defer func() {
-		bind.UseNumber = number
-	}()
-	fun()
-}
-
-func (c *Context) EnableStrictMatching(fun func()) {
-	s := bind.StrictMatching
-	bind.EnableStrictMatching()
-	defer func() {
-		bind.StrictMatching = s
-	}()
-	fun()
-}
-
-func (c *Context) DisableDecoderUseNumber(fun func()) {
-	number := bind.UseNumber
-	bind.DisableDecoderUseNumber()
-	defer func() {
-		bind.UseNumber = number
-	}()
-	fun()
-}
-
-func (c *Context) DisableStrictMatching(fun func()) {
-	s := bind.StrictMatching
-	bind.DisableStrictMatching()
-	defer func() {
-		bind.StrictMatching = s
-	}()
-	fun()
-}
-
-// BindXml
-/*
-@Example
-type User struct {
-		Name string `xml:"name"`
-		Age  int    `xml:"age"`
-}
-
-curl -X POST -d '<?xml version="1.0" encoding="UTF-8"?><root><age>25</age><name>juan</name></root>' -H 'Content-Type: application/xml'  http://127.0.0.1:8888/user/bind/xml
-*/
-func (c *Context) BindXml(obj any) error {
-	return c.MustBindWith(obj, bind.XML)
-}
-
-func (c *Context) MustBindWith(obj any, b bind.Bind) error {
-	if err := c.ShouldBindWith(obj, b); err != nil {
-		//c.W.WriteStatus(http.StatusBadRequest)
-		return err
-	}
-	return nil
-}
-
-func (c *Context) ShouldBindWith(obj any, b bind.Bind) error {
-	return b.Bind(c.R, obj)
-}
-
-/******************************参数绑定end*********************************************/
-
 // DEBUG INFO ERROR 日志打印
 /***************************提供框架使用框架日志打印方法start******************************/
 func (c *Context) DEBUG(msg any, data ...any) {
@@ -400,7 +189,7 @@ func (c *Context) HandlerError(err *goerr.BizError) {
 		return
 	}
 	c.ERROR(err.DetailMsg())
-	_ = c.Fail("业务执行异常")
+	_ = c.Fail("业务执行异常", nil)
 }
 
 func (c *Context) SetHandlerBizError(handler HandlerBizError) {

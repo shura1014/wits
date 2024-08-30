@@ -6,8 +6,8 @@ require (
 	github.com/go-playground/validator/v10 v10.15.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/shura1014/acl v1.0.0
-	github.com/shura1014/cfg v1.0.1
-	github.com/shura1014/common v1.0.4
+	github.com/shura1014/cfg v1.0.2
+	github.com/shura1014/common v1.0.5
 	github.com/shura1014/logger v1.0.1
 )
 

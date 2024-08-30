@@ -76,11 +76,11 @@ func (j *JwtToken) GetToken() MiddlewareFunc {
 		return func(ctx *Context) {
 			data, err := j.GetData(ctx)
 			if err != nil {
-				_ = ctx.Fail("Token: 获取数据异常" + err.Error())
+				_ = ctx.Fail("Token: 获取数据异常"+err.Error(), nil)
 				return
 			}
 			if data == nil {
-				_ = ctx.Fail("Token: 为查询到数据")
+				_ = ctx.Fail("Token: 为查询到数据", nil)
 				return
 			}
 
@@ -109,7 +109,7 @@ func (j *JwtToken) GetToken() MiddlewareFunc {
 
 			tokenString, errToken := token.SignedString(j.Key)
 			if errToken != nil {
-				_ = ctx.Fail("Token: jwt创建异常: " + errToken.Error())
+				_ = ctx.Fail("Token: jwt创建异常: "+errToken.Error(), nil)
 				return
 			}
 

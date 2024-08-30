@@ -36,7 +36,7 @@ func (r *routerGroup) createStaticHandler(handlerPath string, fs http.FileSystem
 			return
 		}
 		_ = f.Close()
-		ctx.W.WriteStatus(restCode)
+		ctx.W.WriteStatus(restErrorCode)
 		fileServer.ServeHTTP(ctx.W, ctx.R)
 
 	}
