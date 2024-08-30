@@ -64,21 +64,29 @@ func (c *Context) Render(status int, r render.Render) error {
 	return err
 }
 
-func (c *Context) Fail(msg string, data any) error {
+func (c *Context) Fail(msg string, data any) {
 	if RestResultEnable() {
-		return c.Back(http.StatusInternalServerError, restErrorCode, msg, data)
+		// 如果是RestResult模式，那么状态码应该是ok，根据code去判断
+		_ = c.Back(http.StatusOK, restErrorCode, msg, data)
 	}
-	return c.JSON(http.StatusInternalServerError, data)
+	_ = c.JSON(http.StatusInternalServerError, data)
 }
 
-func (c *Context) Success(msg string, data any) error {
+func (c *Context) Success(msg string, data any) {
 	if msg == "" {
 		msg = restSuccessMsg
 	}
 	if RestResultEnable() {
-		return c.Back(http.StatusOK, restSuccessCode, msg, data)
+		err := c.Back(http.StatusOK, restSuccessCode, msg, data)
+		if err != nil {
+			_ = c.Back(http.StatusOK, restErrorCode, msg, data)
+		}
 	}
-	return c.JSON(http.StatusOK, data)
+
+	err := c.JSON(http.StatusOK, data)
+	if err != nil {
+		_ = c.JSON(http.StatusInternalServerError, data)
+	}
 }
 
 // Back Rest返回
