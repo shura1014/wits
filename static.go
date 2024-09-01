@@ -4,6 +4,7 @@ import (
 	"github.com/shura1014/common/container/tree"
 	"net/http"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -12,6 +13,13 @@ import (
 // 使用示例，必须以/**结尾
 // group.Static("/static/**", "./file")
 func (r *routerGroup) Static(handlerPath, root string) {
+	if !filepath.IsAbs(root) {
+		_, file, _, _ := runtime.Caller(1)
+		if file != "" {
+			root = filepath.Join(filepath.Dir(file), root)
+		}
+	}
+
 	r.StaticFS(handlerPath, http.Dir(root))
 }
 
@@ -34,7 +42,8 @@ func (r *routerGroup) createStaticHandler(handlerPath string, fs http.FileSystem
 		file := ctx.GetString(tree.FullMatchKey)
 		f, err := fs.Open(file)
 		if err != nil {
-			ctx.W.WriteStatus(http.StatusNotFound)
+			_ = ctx.Back(http.StatusNotFound, http.StatusNotFound, err.Error(), nil)
+			//ctx.W.WriteStatus(http.StatusNotFound)
 			return
 		}
 		_ = f.Close()

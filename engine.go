@@ -271,7 +271,7 @@ func (e *Engine) handleRouter(ctx *Context) {
 	routerGroup := e.getRouterGroup(path)
 	if routerGroup != nil {
 
-		treeNode := routerGroup.treeNode.Get(path, ctx.keys)
+		treeNode := routerGroup.treeNode.Get(routerGroup.Trim(path), ctx.keys)
 		if treeNode != nil && treeNode.IsEnd {
 			// 判断是否支持任意风格请求
 			routerName := treeNode.RouterName

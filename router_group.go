@@ -3,6 +3,7 @@ package wits
 import (
 	"github.com/shura1014/common/container/tree"
 	"net/http"
+	"path/filepath"
 	"strings"
 )
 
@@ -24,20 +25,23 @@ type routerGroup struct {
 	middlewaresMethodMap map[string]map[string][]MiddlewareFunc
 }
 
-// @name /refresh
+// @routerName /refresh
 // @method POST
 // @handler 处理器
 // @middlewares 单个处理器的中间价
 func (r *routerGroup) add(routerName string, method string, handler HandlerFunc, middlewares ...MiddlewareFunc) {
-	if !strings.HasPrefix(routerName, "/") {
-		routerName = "/" + routerName
-	}
+	//if !strings.HasPrefix(routerName, "/") {
+	//	routerName = "/" + routerName
+	//}
+	routerName = filepath.Join("/", routerName)
 	_, ok := r.handleMap[routerName]
 	if !ok {
+		// 没有则创建
 		r.handleMap[routerName] = make(map[string]HandlerFunc)
 		r.middlewaresMethodMap[routerName] = make(map[string][]MiddlewareFunc)
 	}
 
+	// 如果有相同的路由且请求方法一致
 	_, ok = r.handleMap[routerName][method]
 	if ok {
 		Debug("有重复的路由 name %s method %s", routerName, method)
@@ -82,4 +86,9 @@ func (r *routerGroup) methodHandle(routerName string, method string, handlerFunc
 // middlewares 中间件
 func (r *routerGroup) Use(middlewares ...MiddlewareFunc) {
 	r.middlewares = append(r.middlewares, middlewares...)
+}
+
+// Trim 去除组名
+func (r *routerGroup) Trim(path string) string {
+	return strings.TrimPrefix(path, r.groupName)
 }

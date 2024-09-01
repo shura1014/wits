@@ -15,5 +15,8 @@ func main() {
 	group.GET("probe", func(ctx *wits.Context) {
 		ctx.Success("ok", time.Now().UnixNano())
 	})
+
+	staticGroup := engine.Group("/static")
+	staticGroup.Static("/**", "./static")
 	engine.RunServer()
 }
