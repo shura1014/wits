@@ -3,6 +3,7 @@ package wits
 import (
 	"github.com/shura1014/common/container/tree"
 	"net/http"
+	"path/filepath"
 	"strings"
 )
 
@@ -25,7 +26,8 @@ func (r *routerGroup) StaticFS(handlerPath string, fs http.FileSystem) {
 }
 
 func (r *routerGroup) createStaticHandler(handlerPath string, fs http.FileSystem) HandlerFunc {
-	relativePath := strings.TrimSuffix(r.groupName+handlerPath, "**")
+
+	relativePath := strings.TrimSuffix(filepath.Join(r.groupName+handlerPath), "**")
 	fileServer := http.StripPrefix(relativePath, http.FileServer(fs))
 	return func(ctx *Context) {
 		// 检查一下文件是否存在
